@@ -46,7 +46,10 @@ class MLPRegressor:
         """
         first_hidden_layer_output, second_hidden_layer_output, third_hidden_layer_output, output_layer_output = None, None, None, None
         ...
-        "Your implementation goes here"
+        first_hidden_layer_output = sigmoid(np.matmul(x, self.A) + self.A_bias)
+        second_hidden_layer_output = sigmoid(np.matmul(first_hidden_layer_output, self.B) + self.B_bias)
+        third_hidden_layer_output = sigmoid(np.matmul(second_hidden_layer_output, self.C) + self.C_bias)
+        output_layer_output = np.matmul(third_hidden_layer_output, self.D) + self.D_bias
         ...
                 
         return first_hidden_layer_output, second_hidden_layer_output, third_hidden_layer_output, output_layer_output
@@ -57,7 +60,7 @@ class MLPRegressor:
         for iteration_count in range(1, self.epoch_number+1):
 
             for data_index in range(len(data_instances)):
-                x = data_instances[data_index].reshape(1, -1)  # convert into a row vector, (1x2) matrix
+                x = data_instances[data_index].reshape(1, -1)  # convert into a row vector, (1x2) matrix  --> 1x2 değil 1x3
                 label = labels[data_index] # 1D array
                 first_hidden_layer_output, second_hidden_layer_output, third_hidden_layer_output, output_layer_output = self.forward(x)
 
@@ -79,7 +82,22 @@ class MLPRegressor:
                     The amount of weight changes should be stored in "A_update", "A_bias_update", "B_update", "B_bias_update", "C_update", "C_bias_update", "D_update", and "D_bias_update" variables.
                 """
                 ...
-                "Your implementation goes here"
+                delta_O = -2 * (label - output_layer_output)                # (1,1)
+                D_bias_update = delta_O                                     # (1,1)
+                D_update = np.matmul(third_hidden_layer_output.T, delta_O)  # (3,1)
+                
+                delta_T = np.matmul(delta_O, self.D.T) * (third_hidden_layer_output * (1 - third_hidden_layer_output))  # (1,3)
+                C_bias_update = delta_T
+                C_update = np.matmul(second_hidden_layer_output.T, delta_T)  # (4, 3)
+                                    
+                delta_S = np.matmul(delta_T, self.C.T) * (second_hidden_layer_output * (1 - second_hidden_layer_output)) # (1,4)
+                B_bias_update = delta_S
+                B_update = np.matmul(first_hidden_layer_output.T, delta_S)  # (4, 4)
+
+                delta_F = np.matmul(delta_S, self.B.T) * (first_hidden_layer_output * (1 - first_hidden_layer_output)) # (1,4)
+                A_bias_update = delta_F
+                A_update = np.matmul(x.T, delta_F)  # (3, 4)
+
                 ...
 
                 # After finding update values we are performing the weight updates
