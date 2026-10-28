@@ -87,25 +87,22 @@ class MLPClassifier:
                     The amount of weight changes should be stored in "A_update", "A_bias_update", "B_update", "B_bias_update", "C_update", "C_bias_update", "D_update", and "D_bias_update" variables.
                 """
                 ...
-                # 1. Output logit error (Softmax + Cross-Entropy)
-                delta_X = output_layer_output - label.reshape(1, -1)   # (1, 4)
-                D_update = np.matmul(third_hidden_layer_output.T, delta_X)  # (2, 4)
-                D_bias_update = delta_X                                     # (1, 4)
-
-                # 2. Third hidden layer error
-                delta_T = np.matmul(delta_X, self.D.T) * (third_hidden_layer_output * (1.0 - third_hidden_layer_output))  # (1, 2)
-                C_update = np.matmul(second_hidden_layer_output.T, delta_T)  # (3, 2)
-                C_bias_update = delta_T                                     # (1, 2)
-
-                # 3. Second hidden layer error
-                delta_S = np.matmul(delta_T, self.C.T) * (second_hidden_layer_output * (1.0 - second_hidden_layer_output))  # (1, 3)
-                B_update = np.matmul(first_hidden_layer_output.T, delta_S)  # (5, 3)
-                B_bias_update = delta_S                                     # (1, 3)
-
-                # 4. First hidden layer error
-                delta_F = np.matmul(delta_S, self.B.T) * (first_hidden_layer_output * (1.0 - first_hidden_layer_output))  # (1, 5)
-                A_update = np.matmul(x.T, delta_F)                         # (2, 5)
-                A_bias_update = delta_F                                     # (1, 5)
+                delta_O =  output_layer_output - label.reshape(1, -1) #  1x4 [dO1 dO2 dO3 dO4]
+                D_bias_update = delta_O
+                D_update =  np.matmul(third_hidden_layer_output.T, delta_O)  # 2x4 []
+                
+                delta_T = np.matmul(delta_O, self.D.T) * (third_hidden_layer_output * (1 - third_hidden_layer_output)) # 1x2 [dT1 dT2]
+                C_bias_update = delta_T
+                C_update = np.matmul(second_hidden_layer_output.T, delta_T)
+                
+                delta_S = np.matmul(delta_T, self.C.T) * (second_hidden_layer_output * (1 - second_hidden_layer_output))
+                B_bias_update = delta_S
+                B_update = np.matmul(first_hidden_layer_output.T, delta_S)
+                
+                delta_F = np.matmul(delta_S, self.B.T) * (first_hidden_layer_output * (1 - first_hidden_layer_output))
+                A_bias_update = delta_F
+                A_update = np.matmul(x.T, delta_F)
+                
                 ...
 
                 # After finding update values we are performing the weight updates
