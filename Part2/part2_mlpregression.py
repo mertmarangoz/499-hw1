@@ -3,13 +3,24 @@ import numpy as np
 import pickle
 import matplotlib.pyplot as plt
 
+def selu(x):
+    alpha = 1.6732632423543772848170429916717
+    scale = 1.0507009873554804934193349852946
+    return scale * torch.where(x > 0, x, alpha * (torch.exp(x) - 1.0))
+
 def forward_pass(w1, b1, w2, b2, w3, b3, w4, b4, input_data):
     """
     The network consists of 7 input nodes, 256 first hidden layer nodes, 128 second hidden layer nodes, 64 third hidden layer nodes, and 1 output layer node
     The activation function of the hidden layers is selu.
     Here you are expected to perform all the required operations for a forward pass over the network with the given dataset
     """
-    ...
+    
+    first_output_layer = selu((torch.matmul(input_data, w1) + b1))
+    second_layer_output = selu(torch.matmul(first_output_layer, w2) + b2)
+    third_layer_output = selu(torch.matmul(second_layer_output, w3) + b3)
+    output_layer_output = torch.matmul(third_layer_output, w4) + b4
+    return output_layer_output
+    
 
 # we load all training, validation, and test datasets for the regression task
 with open("datasets/part2_regression_train_dataset.data", "rb") as train_input_file:
@@ -42,38 +53,38 @@ train_label = train_label[indices]
 
 # W1 defines the parameters between the input layer and the first hidden layer
 # Here you are expected to initialize W1 via the Normal distribution (mean=0, std=(2.0/(7+256))**0.5).
-W1 = . . .
+W1 = torch.from_numpy(np.random.normal(0, (2.0/(7+256))**0.5, (7, 256)).astype(np.float32)).requires_grad_(True)
 ...
 # b1 defines the bias parameters for the first hidden layer
 # Here you are expected to initialize b1 via the Normal distribution (mean=0, std=(2.0/(1+256))**0.5).
-b1 = . . .
+b1 = torch.from_numpy(np.random.normal(0, (2.0/(1+256))**0.5, (1, 256)).astype(np.float32)).requires_grad_(True)
 ...
 # W2 defines the parameters between the first hidden layer and the second hidden layer
 # Here you are expected to initialize W2 via the Normal distribution (mean=0, std=(2.0/(256+128))**0.5).
-W2 = . . .
+W2 = torch.from_numpy(np.random.normal(0, (2.0/(256+128))**0.5, (256, 128)).astype(np.float32)).requires_grad_(True)
 ...
 # b2 defines the bias parameters for the second hidden layer
 # Here you are expected to initialize b2 via the Normal distribution (mean=0, std=(2.0/(1+128))**0.5).
-b2 = . . .
+b2 = torch.from_numpy(np.random.normal(0, (2.0/(1+128))**0.5, (1, 128)).astype(np.float32)).requires_grad_(True)
 ...
 # W3 defines the parameters between the second hidden layer and the third hidden layer
 # Here you are expected to initialize W3 via the Normal distribution (mean=0, std=(2.0/(128+64))**0.5).
-W3 = . . .
+W3 = torch.from_numpy(np.random.normal(0, (2.0/(128+64))**0.5, (128, 64)).astype(np.float32)).requires_grad_(True)
 ...
 
 # b3 defines the bias parameters for the third hidden layer
 # Here you are expected to initialize b3 via the Normal distribution (mean=0, std=(2.0/(1+64))**0.5).
-b3 = . . .
+b3 = torch.from_numpy(np.random.normal(0, (2.0/(1+64))**0.5, (1, 64)).astype(np.float32)).requires_grad_(True)
 ...
 
 # W4 defines the parameters between the third hidden layer and the output layer
 # Here you are expected to initialize W4 via the Normal distribution (mean=0, std=(2.0/(64+1))**0.5).
-W4 = . . .
+W4 = torch.from_numpy(np.random.normal(0, (2.0/(64+1))**0.5, (64, 1)).astype(np.float32)).requires_grad_(True)
 ...
 
 # b4 defines the bias parameters for the output layer
 # Here you are expected to initialize b4 via the Normal distribution (mean=0, std=(2.0/(1+1))**0.5).
-b4 = . . .
+b4 = torch.from_numpy(np.random.normal(0, (2.0/(1+1))**0.5, (1, 1)).astype(np.float32)).requires_grad_(True)
 ...
 
 
@@ -99,7 +110,8 @@ for iteration in range(1, ITERATION+1):
     train_predictions = forward_pass(W1, b1, W2, b2, W3, b3, W4, b4, train_dataset)
     
     # Here you are expected to calculate the MEAN squared error loss with respect to the network predictions and the training ground truth
-    train_mse_loss = ...
+        
+    train_mse_loss = torch.mean((train_label - train_predictions) ** 2)
     
     train_loss_array.append(train_mse_loss.item())
 
@@ -110,7 +122,7 @@ for iteration in range(1, ITERATION+1):
     with torch.no_grad():
         validation_predictions = forward_pass(W1, b1, W2, b2, W3, b3, W4, b4, validation_dataset)
         # Here you are expected to calculate the average/mean squared error loss for the validation datasets by using the validation dataset ground truth.
-        validation_mse_loss = ...
+        validation_mse_loss = torch.mean((validation_label - validation_predictions) ** 2)
         validation_loss_array.append(validation_mse_loss.item())
     print("Iteration : %d - Train MSE Loss %.4f - Validation MSE Loss : %.2f" % (iteration, train_mse_loss.item(), validation_mse_loss.item()))
 
@@ -119,7 +131,7 @@ for iteration in range(1, ITERATION+1):
 with torch.no_grad():
     test_predictions = forward_pass(W1, b1, W2, b2, W3, b3, W4, b4, test_dataset)
     # Here you are expected to calculate the network's MSE on the test dataset...
-    test_loss = ...
+    test_loss = torch.mean((test_label - test_predictions) ** 2)
     print("Test MSE loss : %.4f" % test_loss.item())
     print("Test RMSE loss : %.4f" % (test_loss.item()**0.5))    
 # We plot the loss versus iteration graph for both datasets (training and validation)
