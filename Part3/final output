@@ -1,0 +1,35 @@
+Config 0: hidden_layers=[256], activation=Sigmoid, lr=0.001, epochs=100
+    Mean Train Acc: 94.14% ± 0.22% | Mean Validation Acc: 40.94% ± 0.94%
+Config 1: hidden_layers=[256], activation=Sigmoid, lr=0.001, epochs=200
+    Mean Train Acc: 99.85% ± 0.02% | Mean Validation Acc: 40.34% ± 0.62%
+Config 2: hidden_layers=[256], activation=Sigmoid, lr=0.0001, epochs=100
+    Mean Train Acc: 69.29% ± 0.40% | Mean Validation Acc: 35.46% ± 0.37%
+Config 3: hidden_layers=[256], activation=Sigmoid, lr=0.0001, epochs=200
+    Mean Train Acc: 88.94% ± 0.29% | Mean Validation Acc: 39.64% ± 1.22%
+Config 4: hidden_layers=[256], activation=ReLU, lr=0.001, epochs=100
+    Mean Train Acc: 99.87% ± 0.03% | Mean Validation Acc: 41.48% ± 0.75%
+Config 5: hidden_layers=[256], activation=ReLU, lr=0.001, epochs=200
+    Mean Train Acc: 100.00% ± 0.00% | Mean Validation Acc: 43.06% ± 0.80%
+Config 6: hidden_layers=[256], activation=ReLU, lr=0.0001, epochs=100
+    Mean Train Acc: 96.90% ± 0.38% | Mean Validation Acc: 42.60% ± 0.84%
+Config 7: hidden_layers=[256], activation=ReLU, lr=0.0001, epochs=200
+    Mean Train Acc: 99.99% ± 0.01% | Mean Validation Acc: 41.86% ± 1.12%
+Config 8: hidden_layers=[512, 256], activation=Sigmoid, lr=0.001, epochs=100
+    Mean Train Acc: 70.27% ± 1.75% | Mean Validation Acc: 36.02% ± 1.10%
+Config 9: hidden_layers=[512, 256], activation=Sigmoid, lr=0.001, epochs=200
+    Mean Train Acc: 98.52% ± 0.31% | Mean Validation Acc: 38.54% ± 0.37%
+Config 10: hidden_layers=[512, 256], activation=Sigmoid, lr=0.0001, epochs=100
+    Mean Train Acc: 23.64% ± 2.07% | Mean Validation Acc: 14.94% ± 1.45%
+Config 11: hidden_layers=[512, 256], activation=Sigmoid, lr=0.0001, epochs=200
+    Mean Train Acc: 49.39% ± 1.18% | Mean Validation Acc: 25.08% ± 1.05%
+Config 12: hidden_layers=[512, 256], activation=ReLU, lr=0.001, epochs=100
+    Mean Train Acc: 100.00% ± 0.00% | Mean Validation Acc: 44.04% ± 0.82%
+Config 13: hidden_layers=[512, 256], activation=ReLU, lr=0.001, epochs=200
+    Mean Train Acc: 100.00% ± 0.00% | Mean Validation Acc: 44.68% ± 1.11%
+Config 14: hidden_layers=[512, 256], activation=ReLU, lr=0.0001, epochs=100
+    Mean Train Acc: 98.68% ± 0.10% | Mean Validation Acc: 43.62% ± 1.04%
+Config 15: hidden_layers=[512, 256], activation=ReLU, lr=0.0001, epochs=200
+    Mean Train Acc: 100.00% ± 0.00% | Mean Validation Acc: 44.18% ± 1.26%
+Best config: Config 13: hidden_layers=[512, 256], activation=ReLU, lr=0.001, epochs=200
+Final Train (train + validation) Accuracy: 100.00% ± 0.00%
+Final Test Accuracy: 46.28% ± 0.55%
